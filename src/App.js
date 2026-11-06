@@ -19,13 +19,18 @@ let rookPosition={
 }
 
 let bishopPosition = {
-  row: 5,
-  col: 4
+  row: 4,
+  col: 6
 }
 
 let queenPosition = {
   row: 2,
   col: 5
+}
+
+let knightPosition = {
+  row: 5,
+  col: 3
 }
 
 
@@ -43,6 +48,8 @@ function App() {
       calculateBishopMoves();
     }else if(queenPosition.row == rowIndex && queenPosition.col == colIndex){
       calculateQueenMoves();
+    }else if(knightPosition.row == rowIndex && knightPosition.col == colIndex){
+      calculateKnightMoves();
     }else{
       setHighlightedBox([])
     }
@@ -137,6 +144,38 @@ function calculateBishopMoves(){
     setHighlightedBox(moves);
   };
 
+// Function for Calculating knight Moves
+  function calculateKnightMoves(){
+
+    let moves = []
+    const direction = [
+      [2,-1],
+      [2,1],
+      [1,2],
+      [-1,2],
+      [-2,1],
+      [-2,-1],
+      [-1,-2],
+      [1,-2]
+    ];
+
+    direction.forEach(([rowChange,colChange])=>{
+
+      let newRow = knightPosition.row + rowChange;
+      let newCol = knightPosition.col + colChange;
+
+      if( newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)
+      {
+        moves.push(`${newRow}${newCol}`);
+        newRow += rowChange;
+        newCol += colChange;
+      }
+
+    });
+
+    setHighlightedBox(moves);
+  };
+
   return (
     <div className="App">
 
@@ -152,6 +191,7 @@ function calculateBishopMoves(){
                     { (rowIndex == rookPosition.row && colIndex == rookPosition.col) ? <div className="rook" >R</div> : ""}
                     { (rowIndex == bishopPosition.row && colIndex == bishopPosition.col) ? <div className="bishop" >B</div> : ""}
                     { (rowIndex == queenPosition.row && colIndex == queenPosition.col) ? <div className="queen" >Q</div> : ""}
+                    { (rowIndex == knightPosition.row && colIndex == knightPosition.col) ? <div className="knight" >K</div> : ""}
 
                   </div>
                 ))
