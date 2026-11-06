@@ -13,45 +13,82 @@ for(let i=0; i<8; i++)
   chessboard.push(row);
 }
 
-let rookPosition={
-  row: 2,
-  col: 2
-}
-
-let bishopPosition = {
-  row: 4,
-  col: 6
-}
-
-let queenPosition = {
-  row: 2,
-  col: 5
-}
-
-let knightPosition = {
-  row: 5,
-  col: 3
-}
-
-
 function App() {
 
   const [highlightedBox,setHighlightedBox] = useState([]);
+  const [selectedPiece, setSelectedPiece] = useState(null);
+
+  const [rookPosition, setRookPosition]=useState({
+    row: 2,
+    col: 2
+  });
+
+  const [bishopPosition,setBishopPosition] = useState({
+    row: 4,
+    col: 6
+  })
+
+  const [queenPosition ,setQueenPosition]= useState({
+    row: 2,
+    col: 5
+  })
+
+  const [knightPosition,setKnightPosition] = useState({
+    row: 5,
+    col: 3
+  })
+
+
 
   function handleBoxClick(rowIndex,colIndex){
     let clickedBox = `${rowIndex}${colIndex}`;
 
-    if(rookPosition.row == rowIndex && rookPosition.col == colIndex)
+    if(highlightedBox.includes(clickedBox))
     {
+      if(selectedPiece === "rook")
+      {
+        setRookPosition({
+          row: rowIndex,
+          col: colIndex
+        });
+      }else if(selectedPiece === "bishop")
+      {
+        setBishopPosition({
+          row: rowIndex,
+          col: colIndex
+        })
+      }else if(selectedPiece === "queen")
+      {
+        setQueenPosition({
+          row: rowIndex,
+          col: colIndex
+        })
+      }else if(selectedPiece === "knight"){
+        setKnightPosition({
+          row: rowIndex,
+          col: colIndex
+        })
+      }else{
+        setSelectedPiece(null);
+      }
+    }
+
+    if(rookPosition.row === rowIndex && rookPosition.col === colIndex)
+    {
+      setSelectedPiece("rook");
       calculateRookMoves();
-    }else if(bishopPosition.row == rowIndex && bishopPosition.col == colIndex){
+    }else if(bishopPosition.row === rowIndex && bishopPosition.col === colIndex){
+      setSelectedPiece("bishop");
       calculateBishopMoves();
-    }else if(queenPosition.row == rowIndex && queenPosition.col == colIndex){
+    }else if(queenPosition.row === rowIndex && queenPosition.col === colIndex){
+      setSelectedPiece("queen");
       calculateQueenMoves();
-    }else if(knightPosition.row == rowIndex && knightPosition.col == colIndex){
+    }else if(knightPosition.row === rowIndex && knightPosition.col === colIndex){
+      setSelectedPiece("knight");
       calculateKnightMoves();
     }else{
       setHighlightedBox([])
+      setSelectedPiece(null)
     }
 
   }
@@ -178,7 +215,7 @@ function calculateBishopMoves(){
 
   return (
     <div className="App">
-
+      <h3>Selected Piece: {selectedPiece}</h3>
       <div className="chessboard">
         {
           chessboard.map((row,rowIndex)=>(
@@ -186,12 +223,12 @@ function calculateBishopMoves(){
 
               {
                 row.map((box,colIndex)=>(
-                  <div className={`${(rowIndex + colIndex) % 2 == 0 ? "whitebox" : "blackbox"} ${(highlightedBox.includes(`${rowIndex}${colIndex}`)) ? "highlighted" : ""}` }  onClick={()=>handleBoxClick(rowIndex,colIndex)}>
+                  <div className={`${(rowIndex + colIndex) % 2 === 0 ? "whitebox" : "blackbox"} ${(highlightedBox.includes(`${rowIndex}${colIndex}`)) ? "highlighted" : ""}` }  onClick={()=>handleBoxClick(rowIndex,colIndex)}>
 
-                    { (rowIndex == rookPosition.row && colIndex == rookPosition.col) ? <div className="rook" >R</div> : ""}
-                    { (rowIndex == bishopPosition.row && colIndex == bishopPosition.col) ? <div className="bishop" >B</div> : ""}
-                    { (rowIndex == queenPosition.row && colIndex == queenPosition.col) ? <div className="queen" >Q</div> : ""}
-                    { (rowIndex == knightPosition.row && colIndex == knightPosition.col) ? <div className="knight" >K</div> : ""}
+                    { (rowIndex === rookPosition.row && colIndex === rookPosition.col) ? <div className="rook" >R</div> : ""}
+                    { (rowIndex === bishopPosition.row && colIndex === bishopPosition.col) ? <div className="bishop" >B</div> : ""}
+                    { (rowIndex === queenPosition.row && colIndex === queenPosition.col) ? <div className="queen" >Q</div> : ""}
+                    { (rowIndex === knightPosition.row && colIndex === knightPosition.col) ? <div className="knight" >K</div> : ""}
 
                   </div>
                 ))
